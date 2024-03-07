@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "gbfs"
+version = "0.1.0"
+description = "Graph-Based Feature-Selection Algorithms"
+authors = ["davidlevinwork <david.levin2@live.biu.ac.il>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.2.1"
+matplotlib = "^3.8.3"
+scikit-learn = "^1.4.1.post1"
+scikit-learn-extra = "^0.3.0"
+kneed = "^0.8.5"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.1"
+
+[tool.poe.tasks]
+linter = [
+    {shell = "ruff check . --fix"},
+    {shell = "ruff format ."},
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
