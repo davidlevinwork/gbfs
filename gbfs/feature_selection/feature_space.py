@@ -1,6 +1,8 @@
-from gbfs.models.data_view import DataView, FeaturesGraph
-import numpy as np
 from itertools import combinations
+
+import numpy as np
+
+from gbfs.models.data_view import DataView, FeaturesGraph
 from gbfs.utils.distance import get_classes, get_distance
 
 

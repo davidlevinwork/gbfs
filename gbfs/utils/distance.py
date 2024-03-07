@@ -1,6 +1,7 @@
+from typing import Tuple
+
 import numpy as np
 import pandas as pd
-from typing import Tuple
 
 
 def get_classes(data: pd.DataFrame, feature: str, label_1: str, label_2: str, label_column: str) -> Tuple[

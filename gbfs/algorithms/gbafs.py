@@ -1,7 +1,8 @@
 from typing import Optional
-from gbfs.utils.data_processor import DataProcessor
+
 from gbfs.feature_selection.feature_space import FeatureSpace
 from gbfs.models.data_view import DataView
+from gbfs.utils.data_processor import DataProcessor
 
 
 class GBAFS:

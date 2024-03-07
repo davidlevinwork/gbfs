@@ -1,8 +1,9 @@
+from typing import Dict, Optional
+
 import pandas as pd
-from typing import Optional, Dict
 from sklearn.preprocessing import MinMaxScaler
 
-from gbfs.models.data_view import DataView, DataCollection, DataProps
+from gbfs.models.data_view import DataCollection, DataProps, DataView
 
 EPSILON = 1e-10
 
