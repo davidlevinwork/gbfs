@@ -1,4 +1,5 @@
 from gbfs.models.protocols import SupportsFitTransform
+
 from .gbfs_base import GBFSBase
 
 
@@ -11,7 +12,13 @@ class GBAFS(GBFSBase):
         label_column: str = 'class',
         verbose: int = 1,
     ):
-        super().__init__(dataset_path, separability_metric, dimension_reduction, label_column, verbose)
+        super().__init__(
+            dataset_path,
+            separability_metric,
+            dimension_reduction,
+            label_column,
+            verbose,
+        )
 
     def find_features(self):
         super().find_features()
@@ -24,7 +31,3 @@ class GBAFS(GBFSBase):
         # 4: find knee based on mss graph
         # 5: return features based on the knee value
         x = 5
-
-
-
-

@@ -1,5 +1,6 @@
+from typing import Any, Protocol
+
 import numpy as np
-from typing import Protocol, Any
 
 
 class SupportsFitTransform(Protocol):
@@ -9,6 +10,7 @@ class SupportsFitTransform(Protocol):
     This protocol expects that implementing models have a fit_transform method,
     which is a common interface for dimensionality reduction techniques in machine learning.
     """
+
     def fit_transform(self, X: np.ndarray, y: Any = None) -> np.ndarray:
         """
         :param X: The high-dimensional data to be reduced.

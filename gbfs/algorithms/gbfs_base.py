@@ -1,20 +1,20 @@
-from typing import Optional
-from gbfs.utils.data_processor import DataProcessor
-from gbfs.models.protocols import SupportsFitTransform
-from gbfs.feature_selection.feature_space import FeatureSpace
-
-from gbfs.models.data_view import DataView
 from abc import ABC, abstractmethod
+from typing import Optional
+
+from gbfs.feature_selection.feature_space import FeatureSpace
+from gbfs.models.data_view import DataView
+from gbfs.models.protocols import SupportsFitTransform
+from gbfs.utils.data_processor import DataProcessor
 
 
 class GBFSBase(ABC):
     def __init__(
-            self,
-            dataset_path: str,
-            separability_metric: str,
-            dimension_reduction: SupportsFitTransform,
-            label_column: str = 'class',
-            verbose: int = 1,
+        self,
+        dataset_path: str,
+        separability_metric: str,
+        dimension_reduction: SupportsFitTransform,
+        label_column: str = 'class',
+        verbose: int = 1,
     ):
         self.separability_metric = separability_metric
         self.dimension_reduction = dimension_reduction

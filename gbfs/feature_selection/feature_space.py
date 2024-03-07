@@ -1,8 +1,9 @@
 from itertools import combinations
+
 import numpy as np
-from gbfs.models.protocols import SupportsFitTransform
 
 from gbfs.models.data_view import DataView, FeaturesGraph
+from gbfs.models.protocols import SupportsFitTransform
 from gbfs.utils.distance import get_distance
 
 
@@ -55,15 +56,15 @@ class FeatureSpace:
         for i, feature in enumerate(self.data.data_props.features):
             for j, labels in enumerate(label_combinations):
                 label_1_values = self._extract_feature_values_by_class(
-                    target_feature=feature,
-                    class_label=labels[0]
+                    target_feature=feature, class_label=labels[0]
                 )
                 label_2_values = self._extract_feature_values_by_class(
-                    target_feature=feature,
-                    class_label=labels[1]
+                    target_feature=feature, class_label=labels[1]
                 )
                 separation_matrix[i][j] = get_distance(
-                    metric=self.separability_metric, c_1=label_1_values, c_2=label_2_values
+                    metric=self.separability_metric,
+                    c_1=label_1_values,
+                    c_2=label_2_values,
                 )
 
         return separation_matrix
@@ -73,9 +74,9 @@ class FeatureSpace:
         return reduced_data
 
     def _extract_feature_values_by_class(
-            self,
-            target_feature: str,
-            class_label: str,
+        self,
+        target_feature: str,
+        class_label: str,
     ) -> np.ndarray:
         """
         Extracts values of a specified feature for two specific class labels from a dataset.
@@ -84,5 +85,7 @@ class FeatureSpace:
         :param class_label: The label of the class to filter the dataset.
         :return: NumPy array containing the feature values for the class.
         """
-        class_values = self.data.norm_data.x_y.loc[self.data.norm_data.x_y[self.label_column] == class_label, target_feature].to_numpy()
+        class_values = self.data.norm_data.x_y.loc[
+            self.data.norm_data.x_y[self.label_column] == class_label, target_feature
+        ].to_numpy()
         return class_values
