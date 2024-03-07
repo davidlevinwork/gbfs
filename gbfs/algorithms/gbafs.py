@@ -6,14 +6,15 @@ from gbfs.utils.data_processor import DataProcessor
 
 
 class GBAFS:
-    def __init__(self,
-                 dataset_path: str,
-                 separability_metric: str,
-                 dimension_reduction: str,
-                 label_column: str = 'class',
-                 verbose: int = 1,
-                 test_size: int = 0.25,
-                 ):
+    def __init__(
+        self,
+        dataset_path: str,
+        separability_metric: str,
+        dimension_reduction: str,
+        label_column: str = 'class',
+        verbose: int = 1,
+        test_size: int = 0.25,
+    ):
         self.separability_metric = separability_metric
         self.dimension_reduction = dimension_reduction
         self.dataset_path = dataset_path
@@ -36,8 +37,15 @@ class GBAFS:
         x = 5
 
     def _process_data(self):
-        processor = DataProcessor(dataset_path=self.dataset_path, label_column=self.label_column)
+        processor = DataProcessor(
+            dataset_path=self.dataset_path, label_column=self.label_column
+        )
         self.data_view = processor.run()
 
     def _compute_feature_space(self):
-        x = FeatureSpace(data=self.data_view, separability_metric=self.separability_metric, dimension_reduction=self.dimension_reduction, label_column=self.label_column)
+        x = FeatureSpace(
+            data=self.data_view,
+            separability_metric=self.separability_metric,
+            dimension_reduction=self.dimension_reduction,
+            label_column=self.label_column,
+        )

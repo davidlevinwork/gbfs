@@ -16,7 +16,13 @@ class FeatureSpace:
     :param label_column: The name of the label column in the dataset.
     """
 
-    def __init__(self, data: DataView, separability_metric: str, dimension_reduction: str, label_column: str) -> None:
+    def __init__(
+        self,
+        data: DataView,
+        separability_metric: str,
+        dimension_reduction: str,
+        label_column: str,
+    ) -> None:
         self.data = data
         self.separability_metric = separability_metric
         self.dimension_reduction = dimension_reduction
@@ -29,7 +35,9 @@ class FeatureSpace:
         :return: FeaturesGraph object containing the separability matrix.
         """
         separability_matrix = self._compute_separability_matrix()
-        return FeaturesGraph(sep_matrix=separability_matrix, reduced_sep_matrix=separability_matrix)
+        return FeaturesGraph(
+            sep_matrix=separability_matrix, reduced_sep_matrix=separability_matrix
+        )
 
     def _compute_separability_matrix(self) -> np.ndarray:
         """
@@ -44,12 +52,15 @@ class FeatureSpace:
 
         for i, feature in enumerate(self.data.data_props.features):
             for j, labels in enumerate(label_combinations):
-                class_1, class_2 = get_classes(feature=feature,
-                                               label_1=labels[0],
-                                               label_2=labels[1],
-                                               data=self.data.norm_data.x_y,
-                                               label_column=self.label_column)
-                separation_matrix[i][j] = get_distance(metric=self.separability_metric,
-                                                       c_1=class_1, c_2=class_2)
+                class_1, class_2 = get_classes(
+                    feature=feature,
+                    label_1=labels[0],
+                    label_2=labels[1],
+                    data=self.data.norm_data.x_y,
+                    label_column=self.label_column,
+                )
+                separation_matrix[i][j] = get_distance(
+                    metric=self.separability_metric, c_1=class_1, c_2=class_2
+                )
 
         return separation_matrix

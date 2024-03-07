@@ -4,8 +4,9 @@ import numpy as np
 import pandas as pd
 
 
-def get_classes(data: pd.DataFrame, feature: str, label_1: str, label_2: str, label_column: str) -> Tuple[
-    np.ndarray, np.ndarray]:
+def get_classes(
+    data: pd.DataFrame, feature: str, label_1: str, label_2: str, label_column: str
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Retrieves classes based on specified feature and labels.
 
@@ -47,7 +48,8 @@ def bhattacharyya_distance(p: np.ndarray, q: np.ndarray):
     std_p = p.std() if p.std() != 0 else 0.00000000001
     std_q = q.std() if q.std() != 0 else 0.00000000001
 
-    var_p, var_q = std_p ** 2, std_q ** 2
-    b = (1 / 8) * ((mean_p - mean_q) ** 2) * (2 / (var_p + var_q)) + \
-        0.5 * np.log((var_p + var_q) / (2 * (std_p * std_q)))
+    var_p, var_q = std_p**2, std_q**2
+    b = (1 / 8) * ((mean_p - mean_q) ** 2) * (2 / (var_p + var_q)) + 0.5 * np.log(
+        (var_p + var_q) / (2 * (std_p * std_q))
+    )
     return b
