@@ -1,11 +1,12 @@
 from typing import Optional
+
 import numpy as np
 
-from gbfs.models.dim_reducer import DimReducerProtocol
-from gbfs.utils.data_processor import DataProcessor
 from gbfs.feature_selection.clustering import Clustering
 from gbfs.feature_selection.feature_space import FeatureSpace
 from gbfs.feature_selection.knee_locator import KneesLocator
+from gbfs.models.dim_reducer import DimReducerProtocol
+from gbfs.utils.data_processor import DataProcessor
 
 
 class FeatureSelectorBase:

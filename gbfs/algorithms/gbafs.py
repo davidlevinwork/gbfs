@@ -1,7 +1,9 @@
-import seaborn as sns
 import matplotlib.pyplot as plt
-from .base import FeatureSelectorBase
+import seaborn as sns
+
 from gbfs.models.dim_reducer import DimReducerProtocol
+
+from .base import FeatureSelectorBase
 
 
 class GBAFS(FeatureSelectorBase):
@@ -31,7 +33,6 @@ class GBAFS(FeatureSelectorBase):
         plt.scatter(centroids[:, 0], centroids[:, 1], marker='o', color='red', edgecolors='black', s=50, linewidth=1.5,
                     label="Selected Features")
 
-        # Improve readability
         plt.colorbar(scatter, ax=ax, label='Feature Separability Power')
 
         ax.xaxis.set_ticks_position('bottom')

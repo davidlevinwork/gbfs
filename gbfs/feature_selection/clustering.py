@@ -1,7 +1,8 @@
-from gbfs.models.data_view import DataProps, FeaturesGraph
-from sklearn_extra.cluster import KMedoids
 import numpy as np
+from sklearn_extra.cluster import KMedoids
+
 from gbfs.feature_selection.mss import calc_mss_value
+from gbfs.models.data_view import DataProps, FeaturesGraph
 
 
 class Clustering:
