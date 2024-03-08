@@ -18,26 +18,27 @@ def calc_mss_value(space: np.ndarray, clustering: dict) -> Optional[float]:
 
     :return: The mean silhouette score as a float. Higher scores indicate better clustering.
     """
-    try:
-        labels = clustering['labels']
-        centroids = clustering['medoid_loc']
+    labels = clustering['labels']
+    centroids = clustering['medoid_loc']
 
-        a = euclidean_distances(space, centroids[labels]).diagonal()
-        b = np.empty_like(a)
+    # distance of each point to its own cluster centroid
+    a = euclidean_distances(space, centroids[labels]).diagonal()
+    b = np.zeros_like(a)
 
-        for idx in range(len(centroids)):
-            not_x_centroid = np.delete(centroids, idx, axis=0)
-            distances_to_other_centroids = euclidean_distances(
-                space[labels == idx], not_x_centroid
-            )
-            b[labels == idx] = distances_to_other_centroids.mean(axis=1)
+    for idx in range(len(centroids)):
+        # list of all the other centroids (excluding the current cluster (idx))
+        other_centroids = np.delete(centroids, idx, axis=0)
 
-        mask = a != 0
-        a = a[mask]
-        b = b[mask]
+        # calculate the distance from all points in the current cluster (idx) to all other centroids
+        distances_to_other_centroids = euclidean_distances(space[labels == idx], other_centroids)
 
-        sil_values = (b - a) / np.maximum(a, b)
-        return np.mean(sil_values)
-    except Exception as e:
-        print(f'==> We have problem with value k={len(centroids)}, error: {e}. <==')
-        return None
+        # store the mean distance of each point in the current cluster to the centroids of other clusters
+        b[labels == idx] = distances_to_other_centroids.mean(axis=1)
+
+    # bool mask to filter out points that have zero distance to their own centroid (1-point cluster) + apply mask
+    mask = a != 0
+    a = a[mask]
+    b = b[mask]
+
+    sil_values = (b - a) / np.maximum(a, b)
+    return np.mean(sil_values)
