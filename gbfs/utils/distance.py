@@ -22,6 +22,7 @@ def get_distance(metric: str, c_1: np.ndarray, c_2: np.ndarray) -> float:
         return bhattacharyya_distance(c_1, c_2)
     elif metric == 'wasserstein':
         from scipy.stats import wasserstein_distance
+
         return wasserstein_distance(c_1, c_2)
     else:
         raise ValueError(f"Unsupported metric '{metric}' provided.")
@@ -42,7 +43,7 @@ def bhattacharyya_distance(p: np.ndarray, q: np.ndarray) -> float:
     std_p = p.std() if p.std() != 0 else 1e-10
     std_q = q.std() if q.std() != 0 else 1e-10
 
-    var_p, var_q = std_p ** 2, std_q ** 2
+    var_p, var_q = std_p**2, std_q**2
     b = (1 / 8) * ((mean_p - mean_q) ** 2) * (2 / (var_p + var_q)) + 0.5 * np.log(
         (var_p + var_q) / (2 * (std_p * std_q))
     )
