@@ -3,7 +3,7 @@ from typing import Any, Protocol
 import numpy as np
 
 
-class SupportsFitTransform(Protocol):
+class DimReducerProtocol(Protocol):
     """
     Protocol for dimensionality reduction models that support fit_transform method.
 
