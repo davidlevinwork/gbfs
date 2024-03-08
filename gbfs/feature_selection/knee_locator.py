@@ -2,11 +2,7 @@ from kneed import KneeLocator
 
 
 class KneesLocator:
-    def __init__(
-            self,
-            x: list,
-            y: list
-    ):
+    def __init__(self, x: list, y: list):
         self.x = x
         self.y = y
 

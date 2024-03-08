@@ -30,8 +30,12 @@ class Clustering:
         """
         results = []
         for k in range(2, self.features_len):
-            kmedoids = self._run_kmedoids(data=self.feature_space.reduced_sep_matrix, k=k)
-            mss = calc_mss_value(space=self.feature_space.reduced_sep_matrix, clustering=kmedoids)
+            kmedoids = self._run_kmedoids(
+                data=self.feature_space.reduced_sep_matrix, k=k
+            )
+            mss = calc_mss_value(
+                space=self.feature_space.reduced_sep_matrix, clustering=kmedoids
+            )
             results.append({'k': k, 'mss': mss, 'kmedoids': kmedoids})
 
         return results
@@ -50,5 +54,5 @@ class Clustering:
         return {
             'labels': kmedoids.labels_,
             'medoids': kmedoids.medoid_indices_,
-            'medoid_loc': kmedoids.cluster_centers_
+            'medoid_loc': kmedoids.cluster_centers_,
         }

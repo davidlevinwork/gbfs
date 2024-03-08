@@ -11,12 +11,12 @@ from gbfs.utils.data_processor import DataProcessor
 
 class FeatureSelectorBase:
     def __init__(
-            self,
-            dataset_path: str,
-            separability_metric: str,
-            dim_reducer_model: DimReducerProtocol,
-            label_column: str = 'class',
-            verbose: int = 1,
+        self,
+        dataset_path: str,
+        separability_metric: str,
+        dim_reducer_model: DimReducerProtocol,
+        label_column: str = 'class',
+        verbose: int = 1,
     ):
         self.verbose = verbose
         self.dataset_path = dataset_path
@@ -35,15 +35,24 @@ class FeatureSelectorBase:
         return self.selected_features.tolist()
 
     def __process_data(self):
-        processor = DataProcessor(dataset_path=self.dataset_path, label_column=self.label_column)
+        processor = DataProcessor(
+            dataset_path=self.dataset_path, label_column=self.label_column
+        )
         self.data = processor.run()
 
     def _create_feature_space(self):
-        feature_space = FeatureSpace(data=self.data, separability_metric=self.separability_metric, dim_reduction_model=self.dim_reducer_model, label_column=self.label_column,)
+        feature_space = FeatureSpace(
+            data=self.data,
+            separability_metric=self.separability_metric,
+            dim_reduction_model=self.dim_reducer_model,
+            label_column=self.label_column,
+        )
         self.feature_space = feature_space.run()
 
     def _evaluate_clustering(self):
-        clustering = Clustering(data_props=self.data.data_props, feature_space=self.feature_space)
+        clustering = Clustering(
+            data_props=self.data.data_props, feature_space=self.feature_space
+        )
         self.clustering = clustering.run()
 
     def _find_knee_point(self):

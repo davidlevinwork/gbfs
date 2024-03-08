@@ -27,7 +27,9 @@ def calc_mss_value(space: np.ndarray, clustering: dict) -> Optional[float]:
 
         for idx in range(len(centroids)):
             not_x_centroid = np.delete(centroids, idx, axis=0)
-            distances_to_other_centroids = euclidean_distances(space[labels == idx], not_x_centroid)
+            distances_to_other_centroids = euclidean_distances(
+                space[labels == idx], not_x_centroid
+            )
             b[labels == idx] = distances_to_other_centroids.mean(axis=1)
 
         mask = a != 0
