@@ -14,11 +14,7 @@ class Clustering:
     :param feature_space: FeaturesGraph instance containing the reduced separability matrix.
     """
 
-    def __init__(
-            self,
-            data_props: DataProps,
-            feature_space: FeaturesGraph
-    ):
+    def __init__(self, data_props: DataProps, feature_space: FeaturesGraph):
         self.data_props = data_props
         self.feature_space = feature_space
         self.features_len = len(self.data_props.features)

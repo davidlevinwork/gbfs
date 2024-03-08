@@ -9,11 +9,7 @@ class KneesLocator:
     :param y: A list of y values of the curve.
     """
 
-    def __init__(
-            self,
-            x: list,
-            y: list
-    ):
+    def __init__(self, x: list, y: list):
         self.x = x
         self.y = y
 

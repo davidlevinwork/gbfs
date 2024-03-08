@@ -82,7 +82,9 @@ class FeatureSpace:
         reduced_data = self.dim_reduction_model.fit_transform(data)
         return reduced_data
 
-    def _extract_feature_values_for_class(self, feature_name: str, class_name: str) -> np.ndarray:
+    def _extract_feature_values_for_class(
+        self, feature_name: str, class_name: str
+    ) -> np.ndarray:
         """
         Retrieves all values of a specified feature from the dataset, but only for rows that belong to a specific class.
 
@@ -90,6 +92,8 @@ class FeatureSpace:
         :param class_name: Name of the class to use for filtering the dataset.
         :return: A NumPy array containing the extracted feature values for the specified class.
         """
-        filtered_rows = self.data.norm_data.x_y[self.data.norm_data.x_y[self.label_column] == class_name]
+        filtered_rows = self.data.norm_data.x_y[
+            self.data.norm_data.x_y[self.label_column] == class_name
+        ]
         feature_values = filtered_rows[feature_name].to_numpy()
         return feature_values

@@ -30,7 +30,9 @@ def calc_mss_value(space: np.ndarray, clustering: dict) -> Optional[float]:
         other_centroids = np.delete(centroids, idx, axis=0)
 
         # calculate the distance from all points in the current cluster (idx) to all other centroids
-        distances_to_other_centroids = euclidean_distances(space[labels == idx], other_centroids)
+        distances_to_other_centroids = euclidean_distances(
+            space[labels == idx], other_centroids
+        )
 
         # store the mean distance of each point in the current cluster to the centroids of other clusters
         b[labels == idx] = distances_to_other_centroids.mean(axis=1)

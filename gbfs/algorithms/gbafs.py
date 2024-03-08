@@ -23,6 +23,7 @@ class GBAFS(FeatureSelectorBase):
     :param label_column: Name of the column in the dataset that contains the labels. Defaults to 'class'.
     :param verbose: Verbosity level of the feature selection process. Defaults to 1.
     """
+
     def __init__(
         self,
         dataset_path: str,

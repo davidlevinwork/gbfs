@@ -67,7 +67,9 @@ class DataProcessor:
         )
         return data
 
-    def _create_data_collections(self, original_data: pd.DataFrame, normalized_data: pd.DataFrame) -> Dict[str, DataCollection]:
+    def _create_data_collections(
+        self, original_data: pd.DataFrame, normalized_data: pd.DataFrame
+    ) -> Dict[str, DataCollection]:
         """
         Separates the original and normalized datasets into DataCollection instances,
         facilitating access to features, labels, and the combined dataset.
@@ -121,7 +123,7 @@ class DataProcessor:
         if self.cost_column:
             try:
                 costs = features[self.cost_column].fillna(EPSILON).tolist()
-                return {feature: cost for feature, cost in zip(features.columns, costs)}
+                return dict(zip(features.columns, costs))
             except KeyError:
                 raise KeyError(
                     f"Cost column '{self.cost_column}' does not exist in the data."

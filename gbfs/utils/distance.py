@@ -8,7 +8,7 @@ def get_distance(metric: str, c_1: np.ndarray, c_2: np.ndarray) -> float:
     method according to the metric specified.
 
     Currently, supports:
-    - 'jm': Jeffries–Matusita (JM) distance
+    - 'jm': Jeffries-Matusita (JM) distance
 
     :param metric: The name of the metric to use for computing the distance.
     :param c_1: Numpy array representing the data points of the first class.
