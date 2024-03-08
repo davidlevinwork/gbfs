@@ -3,7 +3,7 @@ from itertools import combinations
 import numpy as np
 
 from gbfs.models.data_view import DataView, FeaturesGraph
-from gbfs.models.protocols import SupportsFitTransform
+from gbfs.models.dim_reducer import DimReducerProtocol
 from gbfs.utils.distance import get_distance
 
 
@@ -21,7 +21,7 @@ class FeatureSpace:
         self,
         data: DataView,
         separability_metric: str,
-        dim_reduction_model: SupportsFitTransform,
+        dim_reduction_model: DimReducerProtocol,
         label_column: str,
     ) -> None:
         self.data = data
