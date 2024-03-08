@@ -7,6 +7,22 @@ from .base import FeatureSelectorBase
 
 
 class GBAFS(FeatureSelectorBase):
+    """
+    Implements the Graph-Based Automatic Feature Selection (GB-AFS algorithm).
+
+    GB-AFS is a novel graph-based filter method fpr automatic feature selection for multi-class classification tasks.
+    The method determines the minimum combination of features required to sustain prediction performance ; It does not
+    require any user-defined parameters such as the number of features to select.
+
+    GB-AFS is agnostic to any combination of separability metric and dimensionality reduction technique, and the
+    user can choose the desired combination.
+
+    :param dataset_path: Path to the dataset file.
+    :param separability_metric: Metric used to evaluate separability of features.
+    :param dim_reducer_model: Dimensionality reduction model to apply on the dataset.
+    :param label_column: Name of the column in the dataset that contains the labels. Defaults to 'class'.
+    :param verbose: Verbosity level of the feature selection process. Defaults to 1.
+    """
     def __init__(
         self,
         dataset_path: str,
@@ -24,9 +40,21 @@ class GBAFS(FeatureSelectorBase):
         )
 
     def select_features(self):
+        """
+        Executes the feature selection process inherited from FeatureSelectorBase.
+
+        :return: A list of selected feature indices.
+        """
         return super().select_features()
 
     def plot_feature_space(self):
+        """
+        Visualizes the feature space using a scatter plot and highlights the selected features.
+
+        Centroids of selected features are marked distinctly to distinguish them from
+        the rest of the features in the feature space. The color intensity in the scatter plot
+        represents the feature separability power, with a color-bar for reference.
+        """
         centroids = self.selected_features_loc
         feature_space = self.feature_space.reduced_sep_matrix
 

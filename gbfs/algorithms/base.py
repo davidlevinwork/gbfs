@@ -10,6 +10,22 @@ from gbfs.utils.data_processor import DataProcessor
 
 
 class FeatureSelectorBase:
+    """
+    Base class for feature selection using dimensionality reduction, separability metrics,
+    and clustering to identify the most significant features in a dataset.
+
+    The class processes the input dataset, evaluates feature space using the specified
+    dimensionality reduction model and separability metric, performs clustering to find
+    optimal feature subsets, and uses a knee detection method to select the number of
+    features.
+
+    :param dataset_path: Path to the dataset file.
+    :param separability_metric: Metric used to evaluate separability of features.
+    :param dim_reducer_model: Dimensionality reduction model to apply on the dataset.
+    :param label_column: Name of the column in the dataset that contains the labels. Defaults to 'class'.
+    :param verbose: Verbosity level of the feature selection process. Defaults to 1.
+    """
+
     def __init__(
         self,
         dataset_path: str,
@@ -27,6 +43,12 @@ class FeatureSelectorBase:
         self.__process_data()
 
     def select_features(self) -> Optional[list]:
+        """
+        Executes the feature selection process by creating the feature space, evaluating clustering,
+        finding the knee point, and finally selecting the features based on the clustering results.
+
+        :return: A list of selected feature indices or None if no features are selected.
+        """
         self._create_feature_space()
         self._evaluate_clustering()
         self._find_knee_point()
@@ -35,12 +57,18 @@ class FeatureSelectorBase:
         return self.selected_features.tolist()
 
     def __process_data(self):
+        """
+        Processes the input dataset to prepare it for the feature selection process.
+        """
         processor = DataProcessor(
             dataset_path=self.dataset_path, label_column=self.label_column
         )
         self.data = processor.run()
 
     def _create_feature_space(self):
+        """
+        Creates the feature space using the provided dimensionality reduction model and separability metric.
+        """
         feature_space = FeatureSpace(
             data=self.data,
             separability_metric=self.separability_metric,
@@ -50,12 +78,18 @@ class FeatureSelectorBase:
         self.feature_space = feature_space.run()
 
     def _evaluate_clustering(self):
+        """
+        Evaluates the clustering on the feature space to determine the clustering metrics for different numbers of clusters.
+        """
         clustering = Clustering(
             data_props=self.data.data_props, feature_space=self.feature_space
         )
         self.clustering = clustering.run()
 
     def _find_knee_point(self):
+        """
+        Finds the knee point in the clustering metrics to determine the optimal number of features.
+        """
         k_values = [x['k'] for x in self.clustering]
         mss_values = [x['mss'] for x in self.clustering]
 
@@ -63,6 +97,9 @@ class FeatureSelectorBase:
         self._knee_locator = knee_locator.run()
 
     def _find_features(self):
+        """
+        Selects the features based on the clustering results at the knee point.
+        """
         k_clustering = next(x for x in self.clustering if x['k'] == self.knee)
 
         self._mss_knee = k_clustering['mss']

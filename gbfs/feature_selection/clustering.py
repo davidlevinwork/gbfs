@@ -14,19 +14,23 @@ class Clustering:
     :param feature_space: FeaturesGraph instance containing the reduced separability matrix.
     """
 
-    def __init__(self, data_props: DataProps, feature_space: FeaturesGraph):
+    def __init__(
+            self,
+            data_props: DataProps,
+            feature_space: FeaturesGraph
+    ):
         self.data_props = data_props
         self.feature_space = feature_space
-
         self.features_len = len(self.data_props.features)
 
     def run(self):
         """
-        Executes the clustering process in parallel for a range of k values and calculates the MSS (Mean Silhouette Score)
-        for each clustering outcome.
+        Executes the clustering process for a range of k values (from 2 to one less than the number of features) and
+        calculates the MSS (Mean Simplified Silhouette) for each clustering outcome to assess the clustering quality.
 
-        :return: A list of dictionaries, each containing the number of clusters (k), the MSS value, and
-                 the kmedoids clustering result for that number of clusters.
+        :return: A list of dictionaries, each containing the number of clusters ('k'), the MSS value ('mss'),
+                 and the KMedoids clustering result ('kmedoids') for that number of clusters. Each KMedoids result
+                 includes the cluster labels, indices of the medoids, and the locations of the medoids.
         """
         results = []
         for k in range(2, self.features_len):

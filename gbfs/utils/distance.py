@@ -4,11 +4,17 @@ import numpy as np
 def get_distance(metric: str, c_1: np.ndarray, c_2: np.ndarray) -> float:
     """
     Computes the distance between two classes based on the specified metric.
+    This function serves as a dispatcher that selects the appropriate distance calculation
+    method according to the metric specified.
 
-    :param metric: The name of the metric to use for computing distance.
-    :param c_1: Class 1 data points.
-    :param c_2: Class 2 data points.
-    :return: The computed distance metric.
+    Currently, supports:
+    - 'jm': Jeffries–Matusita (JM) distance
+
+    :param metric: The name of the metric to use for computing the distance.
+    :param c_1: Numpy array representing the data points of the first class.
+    :param c_2: Numpy array representing the data points of the second class.
+    :return: The computed distance metric as a float.
+    :raises ValueError: If an unsupported metric name is provided.
     """
     if metric == 'jm':
         return jm_distance(c_1, c_2)
@@ -24,8 +30,8 @@ def jm_distance(p: np.ndarray, q: np.ndarray):
 
 def bhattacharyya_distance(p: np.ndarray, q: np.ndarray):
     mean_p, mean_q = p.mean(), q.mean()
-    std_p = p.std() if p.std() != 0 else 0.00000000001
-    std_q = q.std() if q.std() != 0 else 0.00000000001
+    std_p = p.std() if p.std() != 0 else 1e-10
+    std_q = q.std() if q.std() != 0 else 1e-10
 
     var_p, var_q = std_p**2, std_q**2
     b = (1 / 8) * ((mean_p - mean_q) ** 2) * (2 / (var_p + var_q)) + 0.5 * np.log(

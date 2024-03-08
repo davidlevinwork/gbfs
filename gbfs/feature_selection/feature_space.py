@@ -12,8 +12,8 @@ class FeatureSpace:
     The FeatureSpace class is responsible for computing a separability matrix for feature selection.
 
     :param data: DataView instance containing the dataset.
-    :param separability_metric: The metric used to compute separability.
-    :param dim_reduction_model: The method used to reduce dimensionality.
+    :param separability_metric: The metric used to compute separability between features.
+    :param dim_reduction_model: The method used to reduce dimensionality of the separability matrix.
     :param label_column: The name of the label column in the dataset.
     """
 
@@ -23,7 +23,7 @@ class FeatureSpace:
         separability_metric: str,
         dim_reduction_model: DimReducerProtocol,
         label_column: str,
-    ) -> None:
+    ):
         self.data = data
         self.separability_metric = separability_metric
         self.dim_reduction_model = dim_reduction_model
@@ -33,7 +33,7 @@ class FeatureSpace:
         """
         Executes the process to compute the FeaturesGraph from the separability matrix.
 
-        :return: FeaturesGraph object containing the separability matrix.
+        :return: FeaturesGraph object containing the separability matrix and its dimensionally reduced form.
         """
         separability_matrix = self._compute_separability_matrix()
         red_separability_matrix = self._reduce_dimension(separability_matrix)
@@ -44,7 +44,9 @@ class FeatureSpace:
 
     def _compute_separability_matrix(self) -> np.ndarray:
         """
-        Computes the separability matrix based on the defined metric.
+        Computes the separability matrix based on the defined metric. The separability is calculated
+        between all pairs of class labels for each feature, providing insight into which features are
+        most effective at distinguishing between classes.
 
         :return: Numpy ndarray representing the separability matrix.
         """
@@ -55,11 +57,11 @@ class FeatureSpace:
 
         for i, feature in enumerate(self.data.data_props.features):
             for j, labels in enumerate(label_combinations):
-                label_1_values = self._extract_feature_values_by_class(
-                    target_feature=feature, class_label=labels[0]
+                label_1_values = self._extract_feature_values_for_class(
+                    feature_name=feature, class_name=labels[0]
                 )
-                label_2_values = self._extract_feature_values_by_class(
-                    target_feature=feature, class_label=labels[1]
+                label_2_values = self._extract_feature_values_for_class(
+                    feature_name=feature, class_name=labels[1]
                 )
                 separation_matrix[i][j] = get_distance(
                     metric=self.separability_metric,
@@ -70,22 +72,24 @@ class FeatureSpace:
         return separation_matrix
 
     def _reduce_dimension(self, data: np.ndarray) -> np.ndarray:
+        """
+        Applies the dimensionality reduction model to the separability matrix, reducing its dimensions while attempting
+        to preserve the significant separability features between class labels.
+
+        :param data: The separability matrix as a NumPy ndarray.
+        :return: The dimensionally reduced form of the separability matrix as a NumPy ndarray.
+        """
         reduced_data = self.dim_reduction_model.fit_transform(data)
         return reduced_data
 
-    def _extract_feature_values_by_class(
-        self,
-        target_feature: str,
-        class_label: str,
-    ) -> np.ndarray:
+    def _extract_feature_values_for_class(self, feature_name: str, class_name: str) -> np.ndarray:
         """
-        Extracts values of a specified feature for two specific class labels from a dataset.
+        Retrieves all values of a specified feature from the dataset, but only for rows that belong to a specific class.
 
-        :param target_feature: The feature for which values are to be extracted.
-        :param class_label: The label of the class to filter the dataset.
-        :return: NumPy array containing the feature values for the class.
+        :param feature_name: Name of the feature for which values are to be extracted.
+        :param class_name: Name of the class to use for filtering the dataset.
+        :return: A NumPy array containing the extracted feature values for the specified class.
         """
-        class_values = self.data.norm_data.x_y.loc[
-            self.data.norm_data.x_y[self.label_column] == class_label, target_feature
-        ].to_numpy()
-        return class_values
+        filtered_rows = self.data.norm_data.x_y[self.data.norm_data.x_y[self.label_column] == class_name]
+        feature_values = filtered_rows[feature_name].to_numpy()
+        return feature_values
