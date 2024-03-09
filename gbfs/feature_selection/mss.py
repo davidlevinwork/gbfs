@@ -18,29 +18,33 @@ def calc_mss_value(space: np.ndarray, clustering: dict) -> Optional[float]:
 
     :return: The mean silhouette score as a float. Higher scores indicate better clustering.
     """
-    labels = clustering['labels']
-    centroids = clustering['medoid_loc']
+    cluster_labels = clustering['labels']
+    cluster_centers = clustering['medoid_loc']
 
-    # distance of each point to its own cluster centroid
-    a = euclidean_distances(space, centroids[labels]).diagonal()
-    b = np.zeros_like(a)
+    intra_cluster_distances = euclidean_distances(
+        space, cluster_centers[cluster_labels]
+    ).diagonal()
+    nearest_cluster_distances = np.zeros_like(intra_cluster_distances)
 
-    for idx in range(len(centroids)):
-        # list of all the other centroids (excluding the current cluster (idx))
-        other_centroids = np.delete(centroids, idx, axis=0)
+    for cluster_index, center in enumerate(cluster_centers):
+        cluster_members = space[cluster_labels == cluster_index]
+        if cluster_members.size == 0:
+            continue
 
-        # calculate the distance from all points in the current cluster (idx) to all other centroids
-        distances_to_other_centroids = euclidean_distances(
-            space[labels == idx], other_centroids
+        non_current_centers = np.delete(cluster_centers, cluster_index, axis=0)
+        distances_to_non_current_centers = euclidean_distances(
+            cluster_members, non_current_centers
+        )
+        nearest_cluster_distances[cluster_labels == cluster_index] = (
+            distances_to_non_current_centers.mean(axis=1)
         )
 
-        # store the mean distance of each point in the current cluster to the centroids of other clusters
-        b[labels == idx] = distances_to_other_centroids.mean(axis=1)
+    valid_distances_mask = intra_cluster_distances != 0
+    if not np.any(valid_distances_mask):
+        return 1
 
-    # bool mask to filter out points that have zero distance to their own centroid (1-point cluster) + apply mask
-    mask = a != 0
-    a = a[mask]
-    b = b[mask]
+    a = intra_cluster_distances[valid_distances_mask]
+    b = nearest_cluster_distances[valid_distances_mask]
 
-    sil_values = (b - a) / np.maximum(a, b)
-    return np.mean(sil_values)
+    silhouette_scores = (b - a) / np.maximum(a, b)
+    return np.mean(silhouette_scores)
