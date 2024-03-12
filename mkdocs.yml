@@ -1,0 +1,66 @@
+site_name: "GB-FS: Graph-Based Feature Selection Methods"
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - navigation.top
+    - navigation.scrollbar
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+    - performance.instant
+  language: en
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+      primary: teal
+      accent: purple
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+      primary: teal
+      accent: lime
+
+plugins:
+  - search
+  - social
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/davidlevinwork
+    - icon: fontawesome/brands/medium
+      link: https://github.com/davidlevinwork
+    - icon: fontawesome/brands/python
+      link: https://github.com/davidlevinwork
+    - icon: fontawesome/brands/google-scholar
+      link: https://scholar.google.com/citations?user=9owp5dgAAAAJ&hl=iw
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/davidlevin40/
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.mark
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+copyright: |
+  &copy; 2024 <a href="https://github.com/davidlevinwork"  target="_blank" rel="noopener">David Levin</a>

@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Graph-Based Feature-Selection Algorithms"
 authors = ["davidlevinwork <david.levin2@live.biu.ac.il>"]
 readme = "README.md"
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -14,15 +15,20 @@ scikit-learn-extra = "^0.3.0"
 kneed = "^0.8.5"
 seaborn = "^0.13.2"
 
-
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.1"
 
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.5.3"
+mkdocs-material = {extras = ["imaging"], version = "^9.5.13"}
+
 [tool.poe.tasks]
-linter = [
-    {shell = "ruff check . --fix"},
-    {shell = "ruff format ."},
-]
+# dev
+lint = "ruff check ."
+format = "ruff format ."
+# docs
+build = "mkdocs build"
+serve = "mkdocs serve"
 
 [build-system]
 requires = ["poetry-core"]
