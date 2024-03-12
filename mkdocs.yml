@@ -1,4 +1,6 @@
-site_name: "GB-FS: Graph-Based Feature Selection Methods"
+site_name: "GB-FS"
+site_description: "Graph-Based Feature Selection Methods"
+repo_url: https://github.com/davidlevinwork/gbfs/
 theme:
   name: material
   features:
