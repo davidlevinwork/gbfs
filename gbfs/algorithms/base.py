@@ -129,7 +129,8 @@ class FeatureSelectorBase:
 
     @property
     def number_of_features(self) -> Optional[int]:
-        return self._knee_locator.N
+        # add 2 because we don't check the first and last case
+        return self._knee_locator.N + 2
 
     @property
     def selected_features(self) -> Optional[np.ndarray]:
