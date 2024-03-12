@@ -6,7 +6,7 @@ The primary innovation and strength of GB-AFS lie in its unique capability to au
 
 ## Using GB-AFS: Code Examples and Visualization
 
-GB-AFS offers a versatile and user-friendly Python library for feature selection in multi-class classification tasks. This section guides you through initializing the GB-AFS object with your dataset, selecting features, and visualizing the feature space.
+GBFS offers a versatile and user-friendly Python library for feature selection in multi-class classification tasks. This section guides you through initializing the GB-AFS object with your dataset, selecting features, and visualizing the feature space.
 
 ### Initialization and Parameters
 
@@ -14,7 +14,7 @@ To start using GB-AFS, you first need to initialize the GB-AFS object with your 
 
 
 ``` py title="main.py" linenums="1"
-from gbfs.algorithms import GBAFS
+from gbfs import GBAFS
 
 gbafs = GBAFS(
     dataset_path="path/to/your/dataset.csv",
