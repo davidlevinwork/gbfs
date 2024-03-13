@@ -20,5 +20,5 @@ def test_initialization(mock_dim_reducer_protocol):
     assert fs_base.verbose == verbose
     assert fs_base.dataset_path == dataset_path
     assert fs_base.label_column == label_column
-    assert fs_base.dim_reducer_model is MockDimReducerProtocol
+    assert fs_base.dim_reducer_model is mock_dim_reducer_protocol
     assert fs_base.separability_metric == separability_metric
