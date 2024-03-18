@@ -26,7 +26,7 @@ def calc_mss_value(space: np.ndarray, clustering: dict) -> Optional[float]:
     ).diagonal()
     nearest_cluster_distances = np.zeros_like(intra_cluster_distances)
 
-    for cluster_index, center in enumerate(cluster_centers):
+    for cluster_index, _ in enumerate(cluster_centers):
         cluster_members = space[cluster_labels == cluster_index]
         if cluster_members.size == 0:
             continue
