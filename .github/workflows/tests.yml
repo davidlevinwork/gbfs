@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+    - name: Install dependencies
+      run: |
+        pip install poetry
+        poetry install
+    - name: Lint with Ruff
+      run: poetry run ruff check .
+    - name: Format code with Ruff (Check mode)
+      run: poetry run ruff format --check .
+    - name: Run tests
+      run: poetry run pytest
