@@ -11,9 +11,9 @@ class DimReducerProtocol(Protocol):
     which is a common interface for dimensionality reduction techniques in machine learning.
     """
 
-    def fit_transform(self, X: np.ndarray, y: Any = None) -> np.ndarray:
+    def fit_transform(self, x: np.ndarray, y: Any = None) -> np.ndarray:
         """
-        :param X: The high-dimensional data to be reduced.
+        :param x: The high-dimensional data to be reduced.
         :param y: Optional. Target variable (if required by the fit_transform method).
         :return: The dimensionality reduced data as a numpy ndarray.
         """
