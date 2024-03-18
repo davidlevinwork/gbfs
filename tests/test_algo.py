@@ -8,13 +8,17 @@ def test_initialization(mock_dim_reducer_protocol):
     """
     Test initialization of FeatureSelectorBase with mocked dependencies.
     """
-    dataset_path = 'tests/algorithms/dataset.csv'
+    dataset_path = 'tests/dataset.csv'
     separability_metric = 'jm'
     label_column = 'class'
     verbose = 1
 
     fs_base = FeatureSelectorBase(
-        dataset_path, separability_metric, mock_dim_reducer_protocol, label_column, verbose
+        dataset_path,
+        separability_metric,
+        mock_dim_reducer_protocol,
+        label_column,
+        verbose,
     )
 
     assert fs_base.verbose == verbose
