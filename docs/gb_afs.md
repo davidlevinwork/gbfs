@@ -21,7 +21,6 @@ gbafs = GBAFS(
     separability_metric="your_separability_metric",
     dim_reducer_model="your_dimensionality_reduction_method",
     label_column="class",
-    verbose=1
 )
 ```
 
@@ -31,7 +30,6 @@ gbafs = GBAFS(
 - `separability_metric`: Metric for evaluating feature separability. 
 - `dim_reducer_model`: Dimensionality reduction model applying to your dataset. Must implement a `fit_transform` method for compatibility.
 - `label_column`: Name of the column with labels in your dataset. Defaults to `'class'`.
-- `verbose`: Verbosity level of the process; `0` for no logging, `1` for logging.
 
 Current supported metrics for `separability_metric` are `jm`, `bhattacharyya`, and `wasserstein`. To request support for additional metrics, please open an issue in the repository.
 
