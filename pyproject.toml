@@ -1,13 +1,27 @@
 [tool.poetry]
 name = "gbfs"
-version = "0.1.0"
+version = "0.1.1"
 description = "Graph-Based Feature-Selection Algorithms"
-authors = ["davidlevinwork <david.levin2@live.biu.ac.il>"]
-readme = "README.md"
 license = "MIT"
+readme = "README.md"
+authors = ["David Levin <davidlevin40@gmail.com>"]
+keywords = [
+    "feature-selection",
+    "automatic-feature-selection",
+    "clustering",
+    "dimensionality-reduction",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3 :: Only",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Machine Learning",
+]
 
-[tool.poetry.urls]
-"Repository" = "https://github.com/davidlevinwork/gbfs/"
+homepage = "https://github.com/davidlevinwork/gbfs/"
+repository = "https://github.com/davidlevinwork/gbfs/"
+documentation = "https://davidlevinwork.github.io/gbfs/"
 
 [tool.poetry.dependencies]
 python = "^3.10"
