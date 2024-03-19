@@ -21,7 +21,6 @@ class GBAFS(FeatureSelectorBase):
     :param separability_metric: Metric used to evaluate separability of features.
     :param dim_reducer_model: Dimensionality reduction model to apply on the dataset.
     :param label_column: Name of the column in the dataset that contains the labels. Defaults to 'class'.
-    :param verbose: Verbosity level of the feature selection process. Defaults to 1.
     """
 
     def __init__(
@@ -30,14 +29,12 @@ class GBAFS(FeatureSelectorBase):
         separability_metric: str,
         dim_reducer_model: DimReducerProtocol,
         label_column: str = 'class',
-        verbose: int = 1,
     ):
         super().__init__(
             dataset_path=dataset_path,
             separability_metric=separability_metric,
             dim_reducer_model=dim_reducer_model,
             label_column=label_column,
-            verbose=verbose,
         )
 
     def select_features(self):

@@ -11,17 +11,14 @@ def test_initialization(mock_dim_reducer_protocol):
     dataset_path = 'tests/dataset.csv'
     separability_metric = 'jm'
     label_column = 'class'
-    verbose = 1
 
     fs_base = FeatureSelectorBase(
         dataset_path,
         separability_metric,
         mock_dim_reducer_protocol,
         label_column,
-        verbose,
     )
 
-    assert fs_base.verbose == verbose
     assert fs_base.dataset_path == dataset_path
     assert fs_base.label_column == label_column
     assert fs_base.dim_reducer_model is mock_dim_reducer_protocol
