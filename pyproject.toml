@@ -16,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
-    "Topic :: Scientific/Engineering :: Machine Learning",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 
 homepage = "https://github.com/davidlevinwork/gbfs/"
