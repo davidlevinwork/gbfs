@@ -6,6 +6,9 @@ authors = ["davidlevinwork <david.levin2@live.biu.ac.il>"]
 readme = "README.md"
 license = "MIT"
 
+[tool.poetry.urls]
+"Repository" = "https://github.com/davidlevinwork/gbfs/"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 pandas = "^2.2.1"
