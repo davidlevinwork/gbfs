@@ -3,6 +3,9 @@
 **gbfs** is a comprehensive repository dedicated to advancing Graph-Based Feature Selection methodologies in machine learning. Our project houses two significant contributions to the field: GB-AFS and GB-BC-FS, each developed to address the intricate challenges of feature selection with graph-based solutions.
 
 [![Downloads](https://static.pepy.tech/badge/gbfs)](https://pepy.tech/project/gbfs) [![Downloads](https://static.pepy.tech/badge/gbfs/month)](https://pepy.tech/project/gbfs)
+[![ci Status](https://github.com/davidlevinwork/gbfs/actions/workflows/ci.yml/badge.svg)](https://github.com/davidlevinwork/gbfs/actions/workflows/ci.yml)
+[![Tests Status](https://github.com/davidlevinwork/gbfs/actions/workflows/tests.yml/badge.svg)](https://github.com/davidlevinwork/gbfs/actions/workflows/tests.yml)
+
 
 ## Table of contents
 - [Our Contributions](#our-contributions)
