@@ -1,8 +1,11 @@
 import numpy as np
+from tqdm import tqdm
 from sklearn_extra.cluster import KMedoids
 
 from gbfs.feature_selection.mss import calc_mss_value
 from gbfs.models.data_view import DataProps, FeaturesGraph
+
+STAGE_NAME = 'Clustering Evaluation Using MSS'
 
 
 class Clustering:
@@ -29,7 +32,7 @@ class Clustering:
                  includes the cluster labels, indices of the medoids, and the locations of the medoids.
         """
         results = []
-        for k in range(2, self.features_len):
+        for k in tqdm(range(2, self.features_len), desc=STAGE_NAME):
             kmedoids = self._run_kmedoids(
                 data=self.feature_space.reduced_sep_matrix, k=k
             )

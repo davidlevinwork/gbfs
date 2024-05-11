@@ -1,10 +1,12 @@
 from itertools import combinations
-
+from tqdm import tqdm
 import numpy as np
 
 from gbfs.models.data_view import DataView, FeaturesGraph
 from gbfs.models.dim_reducer import DimReducerProtocol
 from gbfs.utils.distance import get_distance
+
+STAGE_NAME = 'Separability-Based Feature Space'
 
 
 class FeatureSpace:
@@ -55,7 +57,7 @@ class FeatureSpace:
         num_label_combinations = len(label_combinations)
         separation_matrix = np.zeros((num_features, num_label_combinations))
 
-        for i, feature in enumerate(self.data.data_props.features):
+        for i, feature in tqdm(enumerate(self.data.data_props.features), total=num_features, desc=STAGE_NAME):
             for j, labels in enumerate(label_combinations):
                 label_1_values = self._extract_feature_values_for_class(
                     feature_name=feature, class_name=labels[0]
