@@ -1,3 +1,4 @@
+from abc import abstractmethod, ABC
 from typing import Optional
 
 import numpy as np
@@ -9,7 +10,7 @@ from gbfs.models.dim_reducer import DimReducerProtocol
 from gbfs.utils.data_processor import DataProcessor
 
 
-class FeatureSelectorBase:
+class FeatureSelectorBase(ABC):
     """
     Base class for feature selection using dimensionality reduction, separability metrics,
     and clustering to identify the most significant features in a dataset.
@@ -39,26 +40,19 @@ class FeatureSelectorBase:
 
         self.__process_data()
 
+    @abstractmethod
     def select_features(self) -> Optional[list]:
         """
-        Executes the feature selection process by creating the feature space, evaluating clustering,
-        finding the knee point, and finally selecting the features based on the clustering results.
-
-        :return: A list of selected feature indices or None if no features are selected.
+        Abstract method to execute the feature selection process.
         """
-        self._create_feature_space()
-        self._evaluate_clustering()
-        self._find_knee_point()
-        self._find_features()
-
-        return self.selected_features.tolist()
+        pass
 
     def __process_data(self):
         """
         Processes the input dataset to prepare it for the feature selection process.
         """
         processor = DataProcessor(
-            dataset_path=self.dataset_path, label_column=self.label_column
+            dataset_path=self.dataset_path, label_column=self.label_column,
         )
         self.data = processor.run()
 
@@ -113,7 +107,7 @@ class FeatureSelectorBase:
         return self._knee_locator.norm_knee
 
     @property
-    def mss_knee(self) -> Optional[float]:
+    def mss(self) -> Optional[float]:
         return self._mss_knee
 
     @property
