@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict
 
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -19,19 +19,15 @@ class DataProcessor:
 
     :param dataset_path: Path to the dataset file (CSV format expected).
     :param label_column: Name of the column in the dataset that serves as the label. Defaults to 'class'.
-    :param cost_column: Optional; name of the column that indicates the cost associated with each feature.
-                        If not provided, all features are assumed to have equal cost.
     """
 
     def __init__(
         self,
         dataset_path: str,
         label_column: str = 'class',
-        cost_column: Optional[str] = None,
     ):
         self.dataset_path = dataset_path
         self.label_column = label_column
-        self.cost_column = cost_column
 
     def run(self) -> DataView:
         """
@@ -41,11 +37,12 @@ class DataProcessor:
         :return: DataView object encapsulating the original and normalized datasets,
                  along with metadata about the dataset's properties.
         """
-        data = pd.read_csv(self.dataset_path)
-        norm_data = self._normalize_data(data)
+        data = pd.read_csv(self.dataset_path, header=0)
+        feature_costs = self._extract_and_remove_costs(data=data)
+        norm_data = self._normalize_data(data=data)
 
-        data_collections = self._create_data_collections(data, norm_data)
-        data_props = self._compute_data_properties(data_collections['original'])
+        data_collections = self._create_data_collections(original_data=data, normalized_data=norm_data)
+        data_props = self._compute_data_properties(data=data_collections['original'], feature_costs=feature_costs)
 
         return DataView(
             data=data_collections['original'],
@@ -92,7 +89,7 @@ class DataProcessor:
             ),
         }
 
-    def _compute_data_properties(self, data: DataCollection) -> DataProps:
+    def _compute_data_properties(self, data: DataCollection, feature_costs: Dict[str, float]) -> DataProps:
         """
         Computes and encapsulates the dataset's properties, such as the number of features,
         the number of labels, and optionally the cost associated with each feature.
@@ -102,7 +99,6 @@ class DataProcessor:
         """
         labels = data.y[self.label_column].unique()
         features = data.x.columns
-        feature_costs = self._compute_feature_costs(data.x)
 
         return DataProps(
             labels=labels,
@@ -112,21 +108,21 @@ class DataProcessor:
             feature_costs=feature_costs,
         )
 
-    def _compute_feature_costs(self, features: pd.DataFrame) -> Dict[str, float]:
+    @staticmethod
+    def _extract_and_remove_costs(data: pd.DataFrame) -> Dict[str, float]:
         """
-        Computes the cost associated with each feature, based on the values in the cost column,
-        if such a column is specified. Otherwise, it defaults to a cost of 1.0 for all features.
+        Extracts costs from the first row below the column names and removes this row from the DataFrame.
+        Assumes the first row below the column names contains the cost for each feature.
 
-        :param features: A pandas DataFrame of the features from the dataset.
+        :param data: DataFrame from which costs are extracted.
         :return: A dictionary mapping each feature name to its associated cost.
         """
-        if self.cost_column:
-            try:
-                costs = features[self.cost_column].fillna(EPSILON).tolist()
-                return dict(zip(features.columns, costs))
-            except KeyError:
-                raise KeyError(
-                    f"Cost column '{self.cost_column}' does not exist in the data."
-                )
-        else:
-            return {feature: 1.0 for feature in features.columns}
+        try:
+            costs = data.iloc[0].fillna(1.0).to_dict()
+            data.drop(data.index[0], inplace=True)
+        except IndexError:
+            raise ValueError('Data is empty or the cost row does not exist.')
+        except Exception as e:
+            raise RuntimeError(f'An error occurred: {str(e)}')
+
+        return costs
