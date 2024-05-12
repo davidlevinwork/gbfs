@@ -1,9 +1,11 @@
+from typing import Optional
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 from gbfs.models.dim_reducer import DimReducerProtocol
 
-from .base import FeatureSelectorBase
+from gbfs.algorithms.base import FeatureSelectorBase
 
 
 class GBAFS(FeatureSelectorBase):
@@ -37,13 +39,19 @@ class GBAFS(FeatureSelectorBase):
             label_column=label_column,
         )
 
-    def select_features(self):
+    def select_features(self) -> Optional[list]:
         """
-        Executes the feature selection process inherited from FeatureSelectorBase.
+        Executes the feature selection process by creating the feature space, evaluating clustering,
+        finding the knee point, and finally selecting the features based on the clustering results.
 
-        :return: A list of selected feature indices.
+        :return: A list of selected feature indices or None if no features are selected.
         """
-        return super().select_features()
+        self._create_feature_space()
+        self._evaluate_clustering()
+        self._find_knee_point()
+        self._find_features()
+
+        return self.selected_features.tolist()
 
     def plot_feature_space(self):
         """
