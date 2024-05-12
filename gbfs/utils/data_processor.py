@@ -41,8 +41,12 @@ class DataProcessor:
         feature_costs = self._extract_and_remove_costs(data=data)
         norm_data = self._normalize_data(data=data)
 
-        data_collections = self._create_data_collections(original_data=data, normalized_data=norm_data)
-        data_props = self._compute_data_properties(data=data_collections['original'], feature_costs=feature_costs)
+        data_collections = self._create_data_collections(
+            original_data=data, normalized_data=norm_data
+        )
+        data_props = self._compute_data_properties(
+            data=data_collections['original'], feature_costs=feature_costs
+        )
 
         return DataView(
             data=data_collections['original'],
@@ -89,7 +93,9 @@ class DataProcessor:
             ),
         }
 
-    def _compute_data_properties(self, data: DataCollection, feature_costs: Dict[str, float]) -> DataProps:
+    def _compute_data_properties(
+        self, data: DataCollection, feature_costs: Dict[str, float]
+    ) -> DataProps:
         """
         Computes and encapsulates the dataset's properties, such as the number of features,
         the number of labels, and optionally the cost associated with each feature.
@@ -123,6 +129,6 @@ class DataProcessor:
         except IndexError:
             raise ValueError('Data is empty or the cost row does not exist.')
         except Exception as e:
-            raise RuntimeError(f'An error occurred: {str(e)}')
+            raise RuntimeError(f'An error occurred: {e!s}')
 
         return costs

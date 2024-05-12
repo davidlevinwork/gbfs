@@ -3,9 +3,8 @@ from typing import Optional
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from gbfs.models.dim_reducer import DimReducerProtocol
-
 from gbfs.algorithms.base import FeatureSelectorBase
+from gbfs.models.dim_reducer import DimReducerProtocol
 
 
 class GBAFS(FeatureSelectorBase):

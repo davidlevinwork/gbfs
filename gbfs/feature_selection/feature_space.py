@@ -1,6 +1,7 @@
 from itertools import combinations
-from tqdm import tqdm
+
 import numpy as np
+from tqdm import tqdm
 
 from gbfs.models.data_view import DataView, FeaturesGraph
 from gbfs.models.dim_reducer import DimReducerProtocol

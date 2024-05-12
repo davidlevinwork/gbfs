@@ -1,4 +1,4 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from typing import Optional
 
 import numpy as np
@@ -45,14 +45,14 @@ class FeatureSelectorBase(ABC):
         """
         Abstract method to execute the feature selection process.
         """
-        pass
 
     def __process_data(self):
         """
         Processes the input dataset to prepare it for the feature selection process.
         """
         processor = DataProcessor(
-            dataset_path=self.dataset_path, label_column=self.label_column,
+            dataset_path=self.dataset_path,
+            label_column=self.label_column,
         )
         self.data = processor.run()
 

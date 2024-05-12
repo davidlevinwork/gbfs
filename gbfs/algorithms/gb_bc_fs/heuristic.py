@@ -1,19 +1,27 @@
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import numpy as np
 from scipy.spatial import distance
-from tqdm import tqdm
 from sklearn_extra.cluster import KMedoids
+from tqdm import tqdm
 
-from gbfs.models.data_view import DataView, FeaturesGraph
 from gbfs.feature_selection.mss import calc_mss_value
+from gbfs.models.data_view import DataView, FeaturesGraph
 
 STAGE_NAME = 'Heuristic Stage'
 
 
 class Heuristic:
-    def __init__(self, data: DataView, clustering: list, feature_space: FeaturesGraph, knee_value: int, budget: float,
-                 alpha: float = 0.5, epochs: int = 100):
+    def __init__(
+        self,
+        data: DataView,
+        clustering: list,
+        feature_space: FeaturesGraph,
+        knee_value: int,
+        budget: float,
+        alpha: float = 0.5,
+        epochs: int = 100,
+    ):
         self.data = data
         self.budget = budget
         self.knee_value = knee_value
@@ -51,8 +59,10 @@ class Heuristic:
                 if result:
                     return result
 
-        raise RuntimeError(f'Heuristic failed to find a solution within {self.epochs} epochs. '
-                           f'Consider increasing the number of epochs.')
+        raise RuntimeError(
+            f'Heuristic failed to find a solution within {self.epochs} epochs. '
+            f'Consider increasing the number of epochs.'
+        )
 
     def _execute_heuristic(self, k: int) -> Optional[dict]:
         """
@@ -65,7 +75,9 @@ class Heuristic:
         :return: A dictionary containing the cluster labels, indices of the medoids, and the locations of the medoids.
         :raises RuntimeError: If the heuristic fails to find a solution within the predefined epochs.
         """
-        current_kmedoids = next((config['kmedoids'] for config in self.clustering if config['k'] == k), None)
+        current_kmedoids = next(
+            (config['kmedoids'] for config in self.clustering if config['k'] == k), None
+        )
 
         for _ in tqdm(range(self.epochs), total=self.epochs, desc=f'{STAGE_NAME} for k=[{k}]'):
             clustering_cost = self._get_min_clustering_cost(clustering=current_kmedoids)
@@ -96,31 +108,50 @@ class Heuristic:
 
         for medoid_index, medoid_location in zip(clustering['medoids'], clustering['medoid_loc']):
             cluster_label = clustering['labels'][medoid_index]
-            cluster_feature_indices = [index for index, label in enumerate(clustering['labels']) if label == cluster_label]
+            cluster_feature_indices = [
+                index
+                for index, label in enumerate(clustering['labels'])
+                if label == cluster_label
+            ]
 
             medoid_cost = feature_costs[medoid_index]
             medoid_name = feature_names[medoid_index]
-            cluster_feature_names = [feature_names[index] for index in cluster_feature_indices]
-            cluster_feature_costs = [feature_costs[index] for index in cluster_feature_indices]
-            min_distance, max_distance = self._get_cluster_distance(medoid_index, cluster_feature_indices)
+            cluster_feature_names = [
+                feature_names[index] for index in cluster_feature_indices
+            ]
+            cluster_feature_costs = [
+                feature_costs[index] for index in cluster_feature_indices
+            ]
+            min_distance, max_distance = self._get_cluster_distance(
+                medoid_index, cluster_feature_indices
+            )
             total_cluster_cost = sum(cluster_feature_costs)
 
-            clusters.append({
-                'cluster_label': cluster_label,
-                'medoid': medoid_index,
-                'medoid_loc': medoid_location,
-                'medoid_cost': medoid_cost,
-                'medoid_name': medoid_name,
-                'cluster_features_idx': cluster_feature_indices,
-                'cluster_features_name': cluster_feature_names,
-                'cluster_features_cost': cluster_feature_costs,
-                'cluster_total_cost': total_cluster_cost,
-                'cluster_distances': {'max_dist': max_distance, 'min_dist': min_distance}
-            })
+            clusters.append(
+                {
+                    'cluster_label': cluster_label,
+                    'medoid': medoid_index,
+                    'medoid_loc': medoid_location,
+                    'medoid_cost': medoid_cost,
+                    'medoid_name': medoid_name,
+                    'cluster_features_idx': cluster_feature_indices,
+                    'cluster_features_name': cluster_feature_names,
+                    'cluster_features_cost': cluster_feature_costs,
+                    'cluster_total_cost': total_cluster_cost,
+                    'cluster_distances': {
+                        'max_dist': max_distance,
+                        'min_dist': min_distance,
+                    },
+                }
+            )
 
-        self.cluster_details = sorted(clusters, key=lambda cluster: cluster['medoid_cost'], reverse=True)
+        self.cluster_details = sorted(
+            clusters, key=lambda cluster: cluster['medoid_cost'], reverse=True
+        )
 
-    def _get_cluster_distance(self, medoid_index: int, feature_indices: list) -> Tuple[float, float]:
+    def _get_cluster_distance(
+        self, medoid_index: int, feature_indices: list
+    ) -> Tuple[float, float]:
         """
         Calculates the minimum and maximum Euclidean distances from a given medoid to other features in the cluster.
 
@@ -136,7 +167,12 @@ class Heuristic:
             return 0.0, 0.0
 
         space = self.feature_space.reduced_sep_matrix
-        distances = np.array([distance.euclidean(space[feature_idx], space[medoid_index]) for feature_idx in feature_indices])
+        distances = np.array(
+            [
+                distance.euclidean(space[feature_idx], space[medoid_index])
+                for feature_idx in feature_indices
+            ]
+        )
         return distances.min(), distances.max()
 
     def _update_clustering(self):
@@ -151,7 +187,9 @@ class Heuristic:
         The method updates the medoid if a more cost-effective option is found, enhancing overall clustering efficiency.
         """
         for idx, cluster in enumerate(self.cluster_details):
-            total_medoid_cost = sum(cluster['medoid_cost'] for cluster in self.cluster_details)
+            total_medoid_cost = sum(
+                cluster['medoid_cost'] for cluster in self.cluster_details
+            )
             if total_medoid_cost <= self.budget:
                 self.is_heuristic_completed = True
                 return
@@ -161,7 +199,9 @@ class Heuristic:
 
             surplus_cost = self._calculate_surplus_cost(cluster_index=idx)
             adjusted_budget = self.budget - surplus_cost
-            potential_new_medoid = self._select_new_medoid(cluster=cluster, budget=adjusted_budget)
+            potential_new_medoid = self._select_new_medoid(
+                cluster=cluster, budget=adjusted_budget
+            )
 
             if potential_new_medoid[0] is None:
                 continue  # No suitable new medoid found within the adjusted budget
@@ -180,14 +220,21 @@ class Heuristic:
         :return: The sum of backward and forward costs as a float, representing the surplus cost.
         """
         # Calculate backward cost: Sum of medoid costs for all clusters before the current index
-        backward_cost = sum(item['medoid_cost'] for item in self.cluster_details[:cluster_index])
+        backward_cost = sum(
+            item['medoid_cost'] for item in self.cluster_details[:cluster_index]
+        )
 
         # Calculate forward cost: Sum of the minimum feature costs for all clusters after the current index
-        forward_cost = sum(min(res['cluster_features_cost']) for res in self.cluster_details[cluster_index + 1:])
+        forward_cost = sum(
+            min(res['cluster_features_cost'])
+            for res in self.cluster_details[cluster_index + 1 :]
+        )
 
         return backward_cost + forward_cost
 
-    def _select_new_medoid(self, cluster: dict, budget: float) -> Tuple[Optional[int], float]:
+    def _select_new_medoid(
+        self, cluster: dict, budget: float
+    ) -> Tuple[Optional[int], float]:
         """
         Selects a new medoid for a cluster based on the best scoring feature within a specified budget.
 
@@ -205,18 +252,33 @@ class Heuristic:
         is_special_distance = len(cluster['cluster_features_idx']) == 2
 
         relevant_features = [
-            (idx, cost) for idx, cost in zip(cluster['cluster_features_idx'], cluster['cluster_features_cost'])
+            (idx, cost)
+            for idx, cost in zip(
+                cluster['cluster_features_idx'], cluster['cluster_features_cost']
+            )
             if cost < budget
         ]
 
         for feature_idx, feature_cost in relevant_features:
-            score = self._calculate_feature_score(cluster, (feature_idx, feature_cost), is_special_distance)
+            score = self._calculate_feature_score(
+                cluster, (feature_idx, feature_cost), is_special_distance
+            )
             if score < best_score:
-                best_score, best_cost, best_feature_idx = score, feature_cost, feature_idx
+                best_score, best_cost, best_feature_idx = (
+                    score,
+                    feature_cost,
+                    feature_idx,
+                )
 
         return best_feature_idx, best_cost
 
-    def _calculate_feature_score(self, cluster: dict, feature: Tuple[int, float], is_special_distance: bool, epsilon: float = 1e-10) -> float:
+    def _calculate_feature_score(
+        self,
+        cluster: dict,
+        feature: Tuple[int, float],
+        is_special_distance: bool,
+        epsilon: float = 1e-10,
+    ) -> float:
         """
         Calculates a score for a feature based on its cost and distance to the medoid, adjusted by normalization and a weighting factor.
 
@@ -232,18 +294,27 @@ class Heuristic:
         feature_idx, feature_cost = feature
         feature_to_medoid_dist = distance.euclidean(
             self.feature_space.reduced_sep_matrix[feature_idx],
-            self.feature_space.reduced_sep_matrix[cluster['medoid']]
+            self.feature_space.reduced_sep_matrix[cluster['medoid']],
         )
 
         if feature_idx == cluster['medoid'] or is_special_distance:
             normalized_distance = 0
         else:
-            distance_range = cluster['cluster_distances']['max_dist'] - cluster['cluster_distances']['min_dist']
-            normalized_distance = np.divide(feature_to_medoid_dist - cluster['cluster_distances']['min_dist'],
-                                            distance_range + epsilon)
+            distance_range = (
+                cluster['cluster_distances']['max_dist']
+                - cluster['cluster_distances']['min_dist']
+            )
+            normalized_distance = np.divide(
+                feature_to_medoid_dist - cluster['cluster_distances']['min_dist'],
+                distance_range + epsilon,
+            )
 
-        cost_range = max(cluster['cluster_features_cost']) - min(cluster['cluster_features_cost'])
-        normalized_cost = np.divide(feature_cost - min(cluster['cluster_features_cost']), cost_range + epsilon)
+        cost_range = max(cluster['cluster_features_cost']) - min(
+            cluster['cluster_features_cost']
+        )
+        normalized_cost = np.divide(
+            feature_cost - min(cluster['cluster_features_cost']), cost_range + epsilon
+        )
 
         score = self.alpha * normalized_cost + (1 - self.alpha) * normalized_distance
 
@@ -274,7 +345,8 @@ class Heuristic:
         """
         return sum(
             list(self.data.data_props.feature_costs.values())[feature]
-            for cluster_info in self.clustering if cluster_info['k'] == k
+            for cluster_info in self.clustering
+            if cluster_info['k'] == k
             for feature in cluster_info['kmedoids']['medoids']
         )
 
@@ -285,7 +357,9 @@ class Heuristic:
         :param k: The number of clusters to use for KMedoids clustering.
         :return: A dictionary containing the cluster labels, indices of the medoids, and the locations of the medoids.
         """
-        kmedoids = KMedoids(init='k-medoids++', n_clusters=k, method='pam').fit(self.feature_space.reduced_sep_matrix)
+        kmedoids = KMedoids(init='k-medoids++', n_clusters=k, method='pam').fit(
+            self.feature_space.reduced_sep_matrix
+        )
 
         return {
             'labels': kmedoids.labels_,
@@ -300,12 +374,14 @@ class Heuristic:
         :param idx: Index of the cluster in the cluster details list.
         :param new_medoid: A tuple containing the index of the new medoid and its cost.
         """
-        self.cluster_details[idx].update({
-            'medoid': new_medoid[0],
-            'medoid_loc': self.feature_space.reduced_sep_matrix[new_medoid[0]],
-            'medoid_cost': new_medoid[1],
-            'medoid_name': self.data.data_props.features[new_medoid[0]]
-        })
+        self.cluster_details[idx].update(
+            {
+                'medoid': new_medoid[0],
+                'medoid_loc': self.feature_space.reduced_sep_matrix[new_medoid[0]],
+                'medoid_cost': new_medoid[1],
+                'medoid_name': self.data.data_props.features[new_medoid[0]],
+            }
+        )
 
     def _calculate_new_feature_space(self, k: int) -> dict:
         """
@@ -315,7 +391,9 @@ class Heuristic:
         :return: A dictionary with the MSS value, total cost, and details of the new medoids.
         """
         kmedoids = self._get_new_kmedoids()
-        mss = calc_mss_value(space=self.feature_space.reduced_sep_matrix, clustering=kmedoids)
+        mss = calc_mss_value(
+            space=self.feature_space.reduced_sep_matrix, clustering=kmedoids
+        )
         cost = sum(cluster['medoid_cost'] for cluster in self.cluster_details)
 
         return {
@@ -334,12 +412,20 @@ class Heuristic:
         :return: A dictionary with new labels, medoid indices, and medoid locations.
         """
         medoids_idx = [medoid['medoid'] for medoid in self.cluster_details]
-        medoids = [self.feature_space.reduced_sep_matrix[center] for center in medoids_idx]
+        medoids = [
+            self.feature_space.reduced_sep_matrix[center] for center in medoids_idx
+        ]
         labels = []
 
         for feature in self.feature_space.reduced_sep_matrix:
-            closest_centroid_idx = np.argmin([distance.euclidean(feature, self.feature_space.reduced_sep_matrix[medoid])
-                                              for medoid in medoids_idx])
+            closest_centroid_idx = np.argmin(
+                [
+                    distance.euclidean(
+                        feature, self.feature_space.reduced_sep_matrix[medoid]
+                    )
+                    for medoid in medoids_idx
+                ]
+            )
             labels.append(closest_centroid_idx)
 
         return {
@@ -355,7 +441,9 @@ class Heuristic:
         :param k: The number of clusters to retrieve the original clustering results for.
         :return: A dictionary containing the results of the solution.
         """
-        current_kmedoids = next((config['kmedoids'] for config in self.clustering if config['k'] == k), None)
+        current_kmedoids = next(
+            (config['kmedoids'] for config in self.clustering if config['k'] == k), None
+        )
         return {
             'mss': current_kmedoids['mss'],
             'cost': self._get_selected_medoids_cost(k=k),

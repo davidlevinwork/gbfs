@@ -1,6 +1,6 @@
 import numpy as np
-from tqdm import tqdm
 from sklearn_extra.cluster import KMedoids
+from tqdm import tqdm
 
 from gbfs.feature_selection.mss import calc_mss_value
 from gbfs.models.data_view import DataProps, FeaturesGraph

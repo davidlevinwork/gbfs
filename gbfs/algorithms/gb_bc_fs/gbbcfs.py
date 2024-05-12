@@ -1,22 +1,23 @@
-from typing import Optional, Dict
-import numpy as np
-import matplotlib.pyplot as plt
+from typing import Dict, Optional
+
 import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
 
-from gbfs.models.dim_reducer import DimReducerProtocol
-from gbfs.algorithms.gb_bc_fs.heuristic import Heuristic
 from gbfs.algorithms.base import FeatureSelectorBase
+from gbfs.algorithms.gb_bc_fs.heuristic import Heuristic
+from gbfs.models.dim_reducer import DimReducerProtocol
 
 
 class GBBCFS(FeatureSelectorBase):
     def __init__(
-            self,
-            dataset_path: str,
-            separability_metric: str,
-            dim_reducer_model: DimReducerProtocol,
-            budget: int | float,
-            label_column: str = 'class',
+        self,
+        dataset_path: str,
+        separability_metric: str,
+        dim_reducer_model: DimReducerProtocol,
+        budget: int | float,
+        label_column: str = 'class',
     ):
         super().__init__(
             dataset_path=dataset_path,
@@ -57,11 +58,13 @@ class GBBCFS(FeatureSelectorBase):
         if selected_features_sum <= self.budget:
             return self.selected_features.tolist()
 
-        self.heuristic_result = Heuristic(data=self.data,
-                                          budget=self.budget,
-                                          knee_value=self.knee,
-                                          clustering=self.clustering,
-                                          feature_space=self.feature_space).run()
+        self.heuristic_result = Heuristic(
+            data=self.data,
+            budget=self.budget,
+            knee_value=self.knee,
+            clustering=self.clustering,
+            feature_space=self.feature_space,
+        ).run()
         return self.new_selected_features.tolist()
 
     def plot_feature_space(self):
@@ -107,10 +110,22 @@ class GBBCFS(FeatureSelectorBase):
         ax2 = plt.subplot(gs[1])
         cbar_ax = plt.subplot(gs[2])
 
-        scatter1 = plot_graph(ax1, self.selected_features_loc, f'Original Result => k: {len(self.selected_features)} ; Cost: {self.cost:.3f} ; MSS: {self.mss:.3f}')
-        scatter2 = plot_graph(ax2, self.new_selected_features_loc, f'Updated Result => k: {len(self.new_selected_features)} ; Cost: {self.new_cost:.3f} ; MSS: {self.new_mss:.3f}')
+        scatter1 = plot_graph(
+            ax1,
+            self.selected_features_loc,
+            f'Original Result => k: {len(self.selected_features)} ; Cost: {self.cost:.3f} ; MSS: {self.mss:.3f}',
+        )
+        scatter2 = plot_graph(
+            ax2,
+            self.new_selected_features_loc,
+            f'Updated Result => k: {len(self.new_selected_features)} ; Cost: {self.new_cost:.3f} ; MSS: {self.new_mss:.3f}',
+        )
 
-        fig.suptitle('Feature Space with Selected Features Highlighted', fontsize=16, fontweight='bold')
+        fig.suptitle(
+            'Feature Space with Selected Features Highlighted',
+            fontsize=16,
+            fontweight='bold',
+        )
         plt.colorbar(scatter1, cax=cbar_ax, label='Feature Separability Power')
 
         plt.tight_layout()
@@ -118,14 +133,22 @@ class GBBCFS(FeatureSelectorBase):
 
     def get_selected_features_sum(self) -> float:
         feature_costs = self.data.data_props.feature_costs
-        return sum(feature_costs[key] for i, key in enumerate(feature_costs) if i in self.selected_features)
+        return sum(
+            feature_costs[key]
+            for i, key in enumerate(feature_costs)
+            if i in self.selected_features
+        )
 
     @property
     def selected_features_to_cost(self) -> Dict[str, float]:
         feature_costs = self.data.data_props.feature_costs
         features_list = list(feature_costs.keys())
 
-        indices = self.new_selected_features if self.new_selected_features is not None else self.selected_features
+        indices = (
+            self.new_selected_features
+            if self.new_selected_features is not None
+            else self.selected_features
+        )
         return {features_list[i]: feature_costs[features_list[i]] for i in indices}
 
     @property
