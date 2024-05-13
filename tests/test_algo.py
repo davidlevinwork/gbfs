@@ -1,7 +1,9 @@
 from typing import Optional
 from unittest.mock import patch
-from gbfs.algorithms.base import FeatureSelectorBase
+
 import pandas as pd
+
+from gbfs.algorithms.base import FeatureSelectorBase
 
 
 class ConcreteFeatureSelector(FeatureSelectorBase):
