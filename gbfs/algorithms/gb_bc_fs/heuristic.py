@@ -68,8 +68,8 @@ class Heuristic:
         """
         Performs a heuristic-based KMedoids clustering on the provided dataset with a specified number of clusters (k).
 
-        This method attempts to optimize the clustering process under a predefined budget constraint over several epochs.
-        It dynamically adjusts and refines the clustering configuration if the minimal clustering cost exceeds the allowed budget.
+        This method tries to optimize the clustering process under a predefined budget constraint over several epochs.
+        It dynamically adjusts the clustering configuration if the minimal clustering cost exceeds the allowed budget.
 
         :param k: The number of clusters to use for KMedoids clustering.
         :return: A dictionary containing the cluster labels, indices of the medoids, and the locations of the medoids.
@@ -79,7 +79,9 @@ class Heuristic:
             (config['kmedoids'] for config in self.clustering if config['k'] == k), None
         )
 
-        for _ in tqdm(range(self.epochs), total=self.epochs, desc=f'{STAGE_NAME} for k=[{k}]'):
+        for _ in tqdm(
+            range(self.epochs), total=self.epochs, desc=f'{STAGE_NAME} for k=[{k}]'
+        ):
             clustering_cost = self._get_min_clustering_cost(clustering=current_kmedoids)
 
             if clustering_cost > self.budget:
@@ -106,7 +108,9 @@ class Heuristic:
         feature_names = list(data_properties.feature_costs.keys())
         feature_costs = list(data_properties.feature_costs.values())
 
-        for medoid_index, medoid_location in zip(clustering['medoids'], clustering['medoid_loc']):
+        for medoid_index, medoid_location in zip(
+            clustering['medoids'], clustering['medoid_loc']
+        ):
             cluster_label = clustering['labels'][medoid_index]
             cluster_feature_indices = [
                 index
@@ -211,7 +215,7 @@ class Heuristic:
 
     def _calculate_surplus_cost(self, cluster_index: int) -> float:
         """
-        Calculates the surplus cost of the clustering configuration excluding the current cluster at the specified index.
+        Calculates the surplus cost of the clustering config excluding the current cluster at the specified index.
 
         This method computes the sum of the medoid costs of all clusters before the given index (backward cost) and
         the minimum feature costs of all clusters after the given index (forward cost), and returns the total cost.
@@ -243,7 +247,8 @@ class Heuristic:
 
         :param cluster: A dictionary containing details about the cluster.
         :param budget: A float indicating the maximum allowable cost for the new medoid.
-        :return: A tuple containing the index of the best new medoid and its cost, or (None, float('inf')) if no suitable medoid is found.
+        :return: A tuple containing the index of the best new medoid and its cost, or (None, float('inf')) if no
+                 suitable medoid is found.
         """
         best_score = float('inf')
         best_cost = float('inf')
@@ -280,7 +285,8 @@ class Heuristic:
         epsilon: float = 1e-10,
     ) -> float:
         """
-        Calculates a score for a feature based on its cost and distance to the medoid, adjusted by normalization and a weighting factor.
+        Calculates a score for a feature based on its cost and distance to the medoid, adjusted by normalization and a
+        weighting factor.
 
         The function calculates and normalizes the Euclidean distance and cost of a feature relative to the cluster's
         medoid and respective ranges.
@@ -385,7 +391,7 @@ class Heuristic:
 
     def _calculate_new_feature_space(self, k: int) -> dict:
         """
-        Calculates the new feature space and evaluates it using a new set of kmedoids and the Mean Simplified Silhouette (MSS).
+        Calculates the new feature space and evaluates it using a new set of kmedoids and the MSS.
 
         :param k: The number of clusters used to define the new kmedoids.
         :return: A dictionary with the MSS value, total cost, and details of the new medoids.

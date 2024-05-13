@@ -58,7 +58,11 @@ class FeatureSpace:
         num_label_combinations = len(label_combinations)
         separation_matrix = np.zeros((num_features, num_label_combinations))
 
-        for i, feature in tqdm(enumerate(self.data.data_props.features), total=num_features, desc=STAGE_NAME):
+        for i, feature in tqdm(
+            enumerate(self.data.data_props.features),
+            total=num_features,
+            desc=STAGE_NAME,
+        ):
             for j, labels in enumerate(label_combinations):
                 label_1_values = self._extract_feature_values_for_class(
                     feature_name=feature, class_name=labels[0]
