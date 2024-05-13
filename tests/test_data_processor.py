@@ -63,7 +63,9 @@ def test_compute_data_properties():
 
     data_processor = DataProcessor('tests/dataset.csv')
 
-    data_props = data_processor._compute_data_properties(mock_data_collection, feature_costs)
+    data_props = data_processor._compute_data_properties(
+        mock_data_collection, feature_costs
+    )
 
     assert isinstance(data_props, DataProps), 'Should return a DataProps instance.'
     assert data_props.n_features == 2, 'There should be two features.'

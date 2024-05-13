@@ -16,11 +16,9 @@ def test_initialization(mock_read_csv, mock_dim_reducer_protocol):
     Test initialization of FeatureSelectorBase with mocked dependencies.
     """
     # Mock read_csv to return a DataFrame
-    mock_read_csv.return_value = pd.DataFrame({
-        'feature1': [1, 2, 3],
-        'feature2': [4, 5, 6],
-        'class': [0, 1, 0]
-    })
+    mock_read_csv.return_value = pd.DataFrame(
+        {'feature1': [1, 2, 3], 'feature2': [4, 5, 6], 'class': [0, 1, 0]}
+    )
 
     dataset_path = 'tests/dataset.csv'
     separability_metric = 'jm'
