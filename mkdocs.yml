@@ -38,10 +38,8 @@ extra:
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/davidlevinwork
-    - icon: fontawesome/brands/medium
-      link: https://github.com/davidlevinwork
     - icon: fontawesome/brands/python
-      link: https://github.com/davidlevinwork
+      link: https://pypi.org/project/gbfs/
     - icon: fontawesome/brands/google-scholar
       link: https://scholar.google.com/citations?user=9owp5dgAAAAJ&hl=iw
     - icon: fontawesome/brands/linkedin

@@ -1,6 +1,6 @@
 # GB-BC-FS
 
-§GB-BC-FS (Graph-Based Budget-Constraint Feature Selection) is an approach designed to efficiently handle large datasets with numerous features under budget constraints. Unlike traditional methods that generate multiple candidate solutions, GB-BC-FS starts with a single solution and refines it to meet budgetary limits, significantly reducing computational time. The process utilizes the GB-AFS method, which selects a minimal set of features necessary for accuracy in multi-class classification by assessing the discriminative power of features across class pairs.
+GB-BC-FS (Graph-Based Budget-Constraint Feature Selection) is an approach designed to efficiently handle large datasets with numerous features under budget constraints. Unlike traditional methods that generate multiple candidate solutions, GB-BC-FS starts with a single solution and refines it to meet budgetary limits, significantly reducing computational time. The process utilizes the GB-AFS method, which selects a minimal set of features necessary for accuracy in multi-class classification by assessing the discriminative power of features across class pairs.
 
 To ensure feature diversity and accommodate budget constraints, the method includes a heuristic refinement step that adjusts the initial feature set. This adjustment is based on a scoring function that favors lower-cost features, simplifying the feature selection process and enhancing robustness. The approach also evaluates the interrelationships among features, moving beyond traditional isolated assessments.
 
@@ -21,7 +21,7 @@ gbbcfs = GBBCFS(
     separability_metric="your_separability_metric",
     dim_reducer_model="your_dimensionality_reduction_method",
     label_column="class",
-    budget=20,  # Maximum budget for feature selection
+    budget=20,
     alpha=0.5,
     epochs=100,
 )
@@ -32,10 +32,10 @@ gbbcfs = GBBCFS(
 - `dataset_path`: Path to your dataset file. Ensure your dataset is in a CSV format or another compatible format.
 - `separability_metric`: Metric for evaluating feature separability. 
 - `dim_reducer_model`: Dimensionality reduction model applying to your dataset. Must implement a `fit_transform` method for compatibility.
-- `label_column`: Name of the column with labels in your dataset. Defaults to `'class'`.
 - `budget`: Numeric limit for the total allowable cost of selected features.
-- `alpha`: A parameter defines the cost function's scoring method related to the heuristic. See the paper for further details.
-- `epochs`: The number of iterations the heuristic uses to solve for each potential k value. See the paper for further details.
+- `label_column`: Name of the column with labels in your dataset. Defaults to `'class'`.
+- `alpha`: A parameter defines the cost function's scoring method related to the heuristic. Defaults to `0.5`. See the paper for further details.
+- `epochs`: The number of iterations the heuristic uses to solve for each potential k value. Defaults to `100`. See the paper for further details.
 
 Current supported metrics for `separability_metric` are `jm`, `bhattacharyya`, and `wasserstein`. To request support for additional metrics, please open an issue in the repository.
 
