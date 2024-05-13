@@ -11,12 +11,34 @@ from gbfs.models.dim_reducer import DimReducerProtocol
 
 
 class GBBCFS(FeatureSelectorBase):
+    """
+    Implements the Graph-Based Budget-Constraint Feature Selection method (GB-BC-FS).
+
+    GB-BC-FS streamlines feature selection by starting with a single solution and refining it to meet budget
+    constraints, reducing computational demands. It utilizes the GB-AFS method to retain only essential features for
+    accuracy in multi-class classification, focusing on their discriminative power, while ensuring not to exceed budget
+    constraints.
+
+    GB-AFS is agnostic to any combination of separability metric and dimensionality reduction technique, and the
+    user can choose the desired combination.
+
+    :param dataset_path: Path to the dataset file.
+    :param separability_metric: Metric used to evaluate separability of features.
+    :param dim_reducer_model: Dimensionality reduction model to apply on the dataset.
+    :param label_column: Name of the column in the dataset that contains the labels. Defaults to 'class'.
+    :param budget: Maximum allowable cost of selected features.
+    :param epochs: Number of epochs to run the heuristic algorithm, for each k. Defaults to 100.
+    :param alpha: Alpha value used in the heuristic algorithm. Between 0 and 1. Defaults to 0.5.
+    """
+
     def __init__(
         self,
         dataset_path: str,
         separability_metric: str,
         dim_reducer_model: DimReducerProtocol,
         budget: int | float,
+        epochs: int = 100,
+        alpha: float = 0.5,
         label_column: str = 'class',
     ):
         super().__init__(
@@ -29,6 +51,8 @@ class GBBCFS(FeatureSelectorBase):
         if budget <= 0:
             raise ValueError('Budget must be greater than 0.')
         self.budget = budget
+        self.alpha = alpha
+        self.epochs = epochs
         self.heuristic_result = None
 
     def select_features(self) -> Optional[list]:
@@ -60,6 +84,8 @@ class GBBCFS(FeatureSelectorBase):
 
         self.heuristic_result = Heuristic(
             data=self.data,
+            alpha=self.alpha,
+            epochs=self.epochs,
             budget=self.budget,
             knee_value=self.knee,
             clustering=self.clustering,

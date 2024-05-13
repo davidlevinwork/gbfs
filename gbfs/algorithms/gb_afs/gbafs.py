@@ -9,7 +9,7 @@ from gbfs.models.dim_reducer import DimReducerProtocol
 
 class GBAFS(FeatureSelectorBase):
     """
-    Implements the Graph-Based Automatic Feature Selection (GB-AFS algorithm).
+    Implements the Graph-Based Automatic Feature Selection method (GB-AFS).
 
     GB-AFS is a novel graph-based filter method fpr automatic feature selection for multi-class classification tasks.
     The method determines the minimum combination of features required to sustain prediction performance ; It does not

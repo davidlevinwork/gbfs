@@ -14,7 +14,7 @@ Our graph-based feature selection techniques rest on the foundation of identifyi
 
 - **GB-AFS (Graph-Based Automatic Feature Selection)**: A method that automates the process of feature selection for multi-class classification tasks, ensuring the minimal yet most effective set of features is utilized for model training.
   
-- **GB-BC-FS (Graph-Based Budget-Constrained Feature Selection)**: Currently in development, this method seeks to enhance feature selection by integrating budget constraints, ensuring the cost of each feature is considered.
+- **GB-BC-FS (Graph-Based Budget-Constrained Feature Selection)**: This method selects features for multi-class classification tasks while adhering to a budget limitation. It identifies the smallest necessary set of features to ensure that their total cost remains within the pre-set budget.
 
 ## Explore and Contribute
 
