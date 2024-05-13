@@ -80,8 +80,39 @@ gbafs.plot_feature_space()
 
 ### GB-BC-FS
 
-#### Status
-Currently in development.
+#### Initialization
+
+To begin working with GB-AFS, the first step is to initialize the GB-AFS object:
+
+``` py bash
+from gbfs import GBAFS
+
+gbbcfs = GBBCFS(
+    dataset_path="path/to/your/dataset.csv",
+    separability_metric="your_separability_metric",
+    dim_reducer_model="your_dimensionality_reduction_method",
+    label_column="class",
+    budget=20,
+    alpha=0.5,
+    epochs=100,
+)
+```
+
+#### Feature-Selection
+After initializing the GB-BC-FS object, you can move forward with the process of selecting features:
+
+``` py bash
+selected_features = gbbcfs.select_features()
+
+print("Selected Feature Indices:", selected_features)
+```
+
+#### Visualization
+GB-BC-FS also incorporates a technique for visualizing the chosen features within the feature space, offering insights into their distribution and how distinct they are:
+
+``` py bash
+gbbcfs.plot_feature_space()
+```
 
 ## Documentation
 For more information on available commands and usage, refer to the [documentation](https://davidlevinwork.github.io/gbfs/).
