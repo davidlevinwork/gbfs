@@ -116,4 +116,20 @@ For more information on available commands and usage, refer to the [documentatio
 ## Contribution
 Contributions to `gbfs` are welcome! If you encounter any issues or have suggestions for improvements, please open an issue.
 
+
 ## Citation
+
+If you use this code in your research, please cite:
+
+```
+@article{levin2024gb,
+  title={GB-AFS: graph-based automatic feature selection for multi-class classification via Mean Simplified Silhouette},
+  author={Levin, David and Singer, Gonen},
+  journal={Journal of Big Data},
+  volume={11},
+  number={1},
+  pages={79},
+  year={2024},
+  publisher={Springer}
+}
+```
